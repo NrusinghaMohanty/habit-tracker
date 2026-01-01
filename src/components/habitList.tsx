@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Typography } from "@mui/material";
+import { Box, Button, LinearProgress, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import type { RootState } from "../store/store";
 import React from "react";
@@ -6,13 +6,30 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "../store/store";
 import CheckCircle from "@mui/icons-material/CheckCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { toggleHabit } from "../store/habit-slice";
+import { type Habit, toggleHabit, removeHabit } from "../store/habit-slice";
 
 const HabitList: React.FC = () => {
   const { habits } = useSelector((state: RootState) => state.habits);
   const dispatch = useDispatch<AppDispatch>();
 
   const today = new Date().toISOString().split("T")[0];
+
+  const getStreak = (habit: Habit) => {
+    let streak = 0;
+    const currentDate = new Date();
+
+    while (true) {
+      const datestring = currentDate.toISOString().split("T")[0];
+      if (habit.completedDates.includes(datestring)) {
+        streak++;
+        currentDate.setDate(currentDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+
+    return streak;
+  };
 
   return (
     <>
@@ -61,12 +78,24 @@ const HabitList: React.FC = () => {
                       variant="outlined"
                       color="error"
                       startIcon={<DeleteIcon />}
+                      onClick={() => dispatch(removeHabit(habit.id))}
                     >
                       Remove
                     </Button>
                   </Box>
                 </Grid>
               </Grid>
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="body2">
+                  Current Streak: {getStreak(habit)} days
+                </Typography>
+
+                <LinearProgress
+                  variant="determinate"
+                  value={(getStreak(habit) / 30) * 100}
+                  sx={{ mt: 1 }}
+                />
+              </Box>
             </Paper>
           );
         })}
