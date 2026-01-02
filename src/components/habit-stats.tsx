@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import type { AppDispatch, RootState } from "../store/store";
 import { useDispatch, useSelector } from "react-redux";
+import type { Habit } from "../store/habit-slice";
 import { fetchHabits } from "../store/habit-slice";
 import { LinearProgress, Paper, Typography } from "@mui/material";
 

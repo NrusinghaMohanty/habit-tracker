@@ -57,7 +57,12 @@ const AddHabitForm: React.FC = () => {
             <MenuItem value="weekly">Weekly</MenuItem>
           </Select>
         </FormControl>
-        <Button type="submit" variant="contained" color="primary">
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          sx={{ marginBottom: 4 }}
+        >
           Add Habit
         </Button>
       </Box>
